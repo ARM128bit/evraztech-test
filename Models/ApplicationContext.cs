@@ -9,6 +9,7 @@ namespace evraztech_test.Models
     public class ApplicationContext : DbContext
     {
         public DbSet<Equipment> Equipment { get; set; }
+        public DbSet<EquipmentType> EquipmentType { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {

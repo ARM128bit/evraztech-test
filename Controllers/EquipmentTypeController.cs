@@ -13,41 +13,40 @@ namespace evraztech_test.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EquipmentController : ControllerBase
+    public class EquipmentTypeController : ControllerBase
     {
 
         private ApplicationContext db;
-        public EquipmentController(ApplicationContext context)
+        public EquipmentTypeController(ApplicationContext context)
         {
             db = context;
         }
         [HttpGet]
-        public IEnumerable<Equipment> Get()
+        public IEnumerable<EquipmentType> Get()
         {
-            return db.Equipment.ToList();
+            return db.EquipmentType.ToList();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Equipment equipment)
+        public async Task<IActionResult> Post([FromForm] EquipmentType equipmentType)
         {
-            equipment.ID = Guid.NewGuid();
-            equipment.CreationDate = DateTime.Now;
-            db.Equipment.Add(equipment);
+            equipmentType.ID = Guid.NewGuid();
+            db.EquipmentType.Add(equipmentType);
             await db.SaveChangesAsync();
-            return Ok(equipment);
+            return Ok(equipmentType);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            Equipment equipment = await db.Equipment.FirstOrDefaultAsync(p => p.ID.ToString() == id);
-            if (equipment == null)
+            EquipmentType equipmentType = await db.EquipmentType.FirstOrDefaultAsync(p => p.ID.ToString() == id);
+            if (equipmentType == null)
             {
                 return NotFound();
             }
-            db.Equipment.Remove(equipment);
+            db.EquipmentType.Remove(equipmentType);
             await db.SaveChangesAsync();
-            return Ok(equipment);
+            return Ok(equipmentType);
         }
     }
 }
