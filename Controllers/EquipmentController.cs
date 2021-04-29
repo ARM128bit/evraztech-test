@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using evraztech_test.Models;
 
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace evraztech_test.Controllers
 {
@@ -24,12 +25,13 @@ namespace evraztech_test.Controllers
         [HttpGet]
         public IEnumerable<Equipment> Get()
         {
-            return db.Equipment.ToList();
+            return db.Equipment.Include(e => e.Type).ToList();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Equipment equipment)
+        public async Task<IActionResult> Post([FromForm] Equipment equipment)
         {
+            Console.WriteLine(equipment);
             equipment.ID = Guid.NewGuid();
             equipment.CreationDate = DateTime.Now;
             db.Equipment.Add(equipment);

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace evraztech_test
 {
@@ -11,5 +12,7 @@ namespace evraztech_test
         public string Model { get; set; }
 
         public string Description { get; set; }
+        public Guid TypeID { get; set; }
+        public EquipmentType Type { get; set; }
     }
 }

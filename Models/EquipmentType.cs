@@ -7,6 +7,6 @@ namespace evraztech_test
     {
         public string Name { get; set; }
         public Guid ID { get; set; }
-        public List<Equipment> Equipments { get; set; }
+        public Equipment Equipment { get; set; }
     }
 }

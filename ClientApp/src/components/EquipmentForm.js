@@ -9,7 +9,7 @@ export class EquipmentForm extends Component {
         super(props);
         this.state = {
             eqForm: {
-                ID: "", CreationDate: "", Model: "", Description: "", Type: {}
+                CreationDate: "", Model: "", Description: "", TypeID: ""
             }, equipmentTypeList: []};
 
         this.onSubmit = this.onSubmit.bind(this);
@@ -29,7 +29,8 @@ export class EquipmentForm extends Component {
     }
     onTypeChange(e) {
         let _state = { ...this.state };
-        _state.eqForm.Type = this.state.equipmentTypeList.find((et) => et.id === e.target.value)
+        _state.eqForm.TypeID = e.target.value
+        /*_state.eqForm.Type = this.state.equipmentTypeList.find((et) => et.id === e.target.value)*/
         this.setState({ _state });
     }
 
@@ -45,14 +46,13 @@ export class EquipmentForm extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-        console.log(this.state.eqForm)
         let _description = this.state.eqForm.Description.trim();
         let _model = this.state.eqForm.Model.trim();
         if (!_description || !_model) {
             return;
         }
-        this.props.onEquipmentSubmit(this.state.eqForm);
-        this.setState({ eqForm: { ID: "", CreationDate: "", Model: "", Description: "", Type: {} } });
+        this.props.onEquipmentSubmit(new FormData(e.target));
+        this.setState({ eqForm: { CreationDate: "", Model: "", Description: "", TypeID: "" } });
     }
     render() {
         return (
@@ -68,7 +68,7 @@ export class EquipmentForm extends Component {
                     placeholder="Описание"
                     value={this.state.eqForm.Description}
                     onChange={this.onDescriptionChange} />
-                <select name="Type" placeholder="Тип оборудования" onChange={this.onTypeChange}>
+                <select name="TypeID" placeholder="Тип оборудования" onChange={this.onTypeChange}>
                     <option></option>
                     {this.state.equipmentTypeList.map(item => <option key={item.id} value={item.id}>
                         {item.name}

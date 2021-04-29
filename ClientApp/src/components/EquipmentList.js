@@ -24,19 +24,29 @@ export class EquipmentList extends Component {
     }
     
     // добавление объекта
-    async onAddEquipment(_form) {
+    onAddEquipment(_form) {
+        if (_form) {
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("post", this.props.backendURL, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    this.loadData();
+                }
+            }.bind(this);
+            xhr.send(_form);
+        }
+    }
+    /*async onAddEquipment(_form) {
         if (_form) {
             const response = await fetch(this.props.backendURL, {
                 method: 'POST', // или 'PUT'
-                body: JSON.stringify(_form), // данные могут быть 'строкой' или {объектом}!
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                body: _form, // данные могут быть 'строкой' или {объектом}!
             });
             const _code = await response.status;
             if (_code == 200) this.loadData();
         }
-    }
+    }*/
     // удаление объекта
     onRemoveEquipment(item) {
         if (item) {
