@@ -20,5 +20,9 @@ namespace evraztech_test
         [Required]
         public Guid TypeID { get; set; }
         public EquipmentType Type { get; set; }
+
+        [Required]
+        public Guid UserID { get; set; }
+        public User User { get; set; }
     }
 }

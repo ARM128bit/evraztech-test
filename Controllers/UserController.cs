@@ -14,30 +14,29 @@ namespace evraztech_test.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EquipmentController : ControllerBase
+    public class UserController : ControllerBase
     {
 
         private ApplicationContext db;
-        public EquipmentController(ApplicationContext context)
+        public UserController(ApplicationContext context)
         {
             db = context;
         }
         [HttpGet]
-        public IEnumerable<Equipment> Get()
+        public IEnumerable<User> Get()
         {
-            return db.Equipment.Include(e => e.Type).Include(e => e.User).ToList();
+            return db.User.ToList();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNewEquipment([FromForm] Equipment equipment)
+        public async Task<IActionResult> CreateNewEquipment([FromForm] User user)
         {
             if (ModelState.IsValid)
             {
-                equipment.ID = Guid.NewGuid();
-                equipment.CreationDate = DateTime.Now;
-                db.Equipment.Add(equipment);
+                user.ID = Guid.NewGuid();
+                db.User.Add(user);
                 await db.SaveChangesAsync();
-                return Created("CreateNewEquipment", equipment);
+                return Created("CreateNewEquipment", user);
             } else
             {
                 return BadRequest();
@@ -47,12 +46,12 @@ namespace evraztech_test.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            Equipment equipment = await db.Equipment.FirstOrDefaultAsync(p => p.ID.ToString() == id);
-            if (equipment == null)
+            User user = await db.User.FirstOrDefaultAsync(p => p.ID.ToString() == id);
+            if (user == null)
             {
                 return NotFound();
             }
-            db.Equipment.Remove(equipment);
+            db.User.Remove(user);
             await db.SaveChangesAsync();
             return NoContent();
         }

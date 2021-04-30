@@ -4,6 +4,7 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { EquipmentList } from './components/EquipmentList';
 import { EquipmentTypeList } from './components/EquipmentTypeList';
+import { UserList } from './components/UserList';
 
 import './custom.css'
 
@@ -15,13 +16,17 @@ export default class App extends Component {
       <Layout>
         <Route exact path='/' component={Home} />
         <Route
-                path='/equipment'
-                component={() => <EquipmentList backendURL='/api/equipment'/>}
-            />
+            path='/equipment'
+            component={() => <EquipmentList backendURL='/api/equipment'/>}
+        />
         <Route
-                path='/equipmenttype'
-                component={() => <EquipmentTypeList backendURL='/api/equipmenttype' />}
-            />
+            path='/equipmenttype'
+            component={() => <EquipmentTypeList backendURL='/api/equipmenttype' />}
+        />
+        <Route
+            path='/user'
+            component={() => <UserList backendURL='/api/user' />}
+        />
       </Layout>
     );
   }
