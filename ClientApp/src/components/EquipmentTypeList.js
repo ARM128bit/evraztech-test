@@ -4,7 +4,7 @@ import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css';
 
-import { successNotification, deniedNotification, infoNotification, definedMessages } from './sharedFunctions'
+import { undefinedNotification, definedMessages } from './sharedFunctions'
 
 export class EquipmentTypeList extends Component {
     static displayName = EquipmentTypeList.name;
@@ -38,20 +38,12 @@ export class EquipmentTypeList extends Component {
                 let _resp = JSON.parse(xhr.responseText);
                 if (xhr.status === 201) {
                     this.loadData();
-                    store.addNotification({
-                        ...successNotification,
-                        title: "Wonderful!",
-                        message: "Новый тип оборудования добавлен!",
-
-                    });
-                } else if (xhr.status === 400) {
-                    store.addNotification({
-                        ...deniedNotification,
-                        title: "Ошибка! Не удалось добавить тип оборудования!",
-                        message: definedMessages[_resp.title],
-
-                    });
                 }
+                store.addNotification({
+                    ...undefinedNotification,
+                    ...definedMessages.equipmentTypeForm[xhr.status],
+
+                }); 
             }.bind(this);
             xhr.send(_form);
         }
@@ -65,16 +57,14 @@ export class EquipmentTypeList extends Component {
             xhr.open("delete", url, true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onload = function () {
-                if (xhr.status === 200) {
+                if (xhr.status === 204) {
                     this.loadData();
-
-                    store.addNotification({
-                        ...infoNotification,
-                        title: "Удалено!",
-                        message: "Тип оборудования удален!",
-
-                    });
                 }
+                store.addNotification({
+                    ...undefinedNotification,
+                    ...definedMessages.equipmentTypeForm[xhr.status],
+
+                }); 
             }.bind(this);
             xhr.send();
         }

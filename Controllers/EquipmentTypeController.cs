@@ -54,7 +54,7 @@ namespace evraztech_test.Controllers
             }
             db.EquipmentType.Remove(equipmentType);
             await db.SaveChangesAsync();
-            return Ok(equipmentType);
+            return NoContent();
         }
     }
 }
