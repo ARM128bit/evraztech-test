@@ -18,10 +18,6 @@ export class EquipmentTypeForm extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-        let _name = this.state.name.trim();
-        if (!_name) {
-            return;
-        }
         this.props.onEquipmentTypeSubmit(new FormData(e.target));
         this.setState({ name: "" });
     }

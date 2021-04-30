@@ -19,9 +19,8 @@ namespace evraztech_test.Models
         /*protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
             builder.Entity<EquipmentType>()
-            .HasOne<Equipment>(e => e.Eq)
+            .HasOne<Equipment>(e => e.Equipment)
             .WithOne(et => et.Type)
             .HasForeignKey<Equipment>(p => p.TypeID);
         }*/

@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import { EquipmentTypeForm } from './EquipmentTypeForm';
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css';
+
+import { successNotification, deniedNotification, infoNotification, definedMessages } from './sharedFunctions'
 
 export class EquipmentTypeList extends Component {
     static displayName = EquipmentTypeList.name;
@@ -30,8 +35,22 @@ export class EquipmentTypeList extends Component {
 
             xhr.open("post", this.props.backendURL, true);
             xhr.onload = function () {
-                if (xhr.status === 200) {
+                let _resp = JSON.parse(xhr.responseText);
+                if (xhr.status === 201) {
                     this.loadData();
+                    store.addNotification({
+                        ...successNotification,
+                        title: "Wonderful!",
+                        message: "Новый тип оборудования добавлен!",
+
+                    });
+                } else if (xhr.status === 400) {
+                    store.addNotification({
+                        ...deniedNotification,
+                        title: "Ошибка! Не удалось добавить тип оборудования!",
+                        message: definedMessages[_resp.title],
+
+                    });
                 }
             }.bind(this);
             xhr.send(_form);
@@ -39,7 +58,7 @@ export class EquipmentTypeList extends Component {
     }
     // удаление объекта
     onRemoveEquipmentType(item) {
-        if (item) {
+        if (window.confirm(`Are you sure to remove this equipment type?`) && item) {
             var url = this.props.backendURL + "/" + item.id;
 
             var xhr = new XMLHttpRequest();
@@ -48,6 +67,13 @@ export class EquipmentTypeList extends Component {
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     this.loadData();
+
+                    store.addNotification({
+                        ...infoNotification,
+                        title: "Удалено!",
+                        message: "Тип оборудования удален!",
+
+                    });
                 }
             }.bind(this);
             xhr.send();

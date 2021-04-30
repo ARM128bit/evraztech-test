@@ -46,11 +46,6 @@ export class EquipmentForm extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-        let _description = this.state.eqForm.Description.trim();
-        let _model = this.state.eqForm.Model.trim();
-        if (!_description || !_model) {
-            return;
-        }
         this.props.onEquipmentSubmit(new FormData(e.target));
         this.setState({ eqForm: { CreationDate: "", Model: "", Description: "", TypeID: "" } });
     }

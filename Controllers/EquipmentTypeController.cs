@@ -28,12 +28,20 @@ namespace evraztech_test.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm] EquipmentType equipmentType)
+        public async Task<IActionResult> CreateNewEquipmentType([FromForm] EquipmentType equipmentType)
         {
-            equipmentType.ID = Guid.NewGuid();
-            db.EquipmentType.Add(equipmentType);
-            await db.SaveChangesAsync();
-            return Ok(equipmentType);
+            if (ModelState.IsValid)
+            {
+                equipmentType.ID = Guid.NewGuid();
+                db.EquipmentType.Add(equipmentType);
+                await db.SaveChangesAsync();
+                return Created("CreateNewEquipmentType", equipmentType);
+            }
+            else
+            {
+                return BadRequest();
+            }
+            
         }
 
         [HttpDelete("{id}")]

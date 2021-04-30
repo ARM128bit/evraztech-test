@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import { EquipmentForm } from './EquipmentForm';
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css';
+
+import { successNotification, deniedNotification, infoNotification, definedMessages } from './sharedFunctions'
 
 export class EquipmentList extends Component {
     static displayName = EquipmentList.name;
@@ -30,8 +35,22 @@ export class EquipmentList extends Component {
 
             xhr.open("post", this.props.backendURL, true);
             xhr.onload = function () {
-                if (xhr.status === 200) {
+                let _resp = JSON.parse(xhr.responseText);
+                if (xhr.status === 201) {
                     this.loadData();
+                    store.addNotification({
+                        ...successNotification,
+                        title: "Wonderful!",
+                        message: "Новая оборудование добавлено!",
+                        
+                    });
+                } else if (xhr.status === 400){
+                    store.addNotification({
+                        ...deniedNotification,
+                        title: "Ошибка! Не удалось добавить оборудование!",
+                        message: definedMessages[_resp.title],
+
+                    });
                 }
             }.bind(this);
             xhr.send(_form);
@@ -58,6 +77,13 @@ export class EquipmentList extends Component {
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     this.loadData();
+                    store.addNotification({
+                        ...infoNotification,
+                        title: "Удалено!",
+                        message: "Оборудование удалено!",
+
+                    });
+                    
                 }
             }.bind(this);
             xhr.send();
