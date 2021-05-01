@@ -9,69 +9,80 @@ export class EquipmentForm extends Component {
         super(props);
         this.state = {
             eqForm: {
-                CreationDate: "", Model: "", Description: "", TypeID: ""
-            }, equipmentTypeList: []};
+                CreationDate: "", Model: "", Description: "", TypeID: "", UserID: ""
+            }, equipmentTypeList: [], userList: [], userListIsLoading: true, equipmentTypeIsLoading: true};
 
         this.onSubmit = this.onSubmit.bind(this);
-        this.onModelChange = this.onModelChange.bind(this);
-        this.onDescriptionChange = this.onDescriptionChange.bind(this);
-        this.onTypeChange = this.onTypeChange.bind(this);
+        this.onPropChange = this.onPropChange.bind(this);
     }
-    onModelChange(e) {
+    onPropChange(e) {
         let _state = { ...this.state };
-        _state.eqForm.Model = e.target.value;
-        this.setState({ _state });
-    }
-    onDescriptionChange(e) {
-        let _state = { ...this.state };
-        _state.eqForm.Description = e.target.value;
-        this.setState({ _state });
-    }
-    onTypeChange(e) {
-        let _state = { ...this.state };
-        _state.eqForm.TypeID = e.target.value
-        /*_state.eqForm.Type = this.state.equipmentTypeList.find((et) => et.id === e.target.value)*/
+        _state.eqForm[e.target.name] = e.target.value;
         this.setState({ _state });
     }
 
     componentDidMount() {
         this.loadEquipmentTypeList();
+        this.loadUserList();
     }
     // загрузка список типов оборудования
     async loadEquipmentTypeList() {
         const response = await fetch('/api/equipmenttype');
         const data = await response.json();
-        this.setState({ equipmentTypeList: data });
+        this.setState({ equipmentTypeList: data, equipmentTypeIsLoading: false });
     }
-
+    async loadUserList() {
+        const response = await fetch('/api/user');
+        const data = await response.json();
+        this.setState({ userList: data, userListIsLoading: false });
+    }
+    formIsAccess() {
+        return this.state.userList.length == 0 || this.state.equipmentTypeList.length == 0
+    }
     onSubmit(e) {
         e.preventDefault();
         this.props.onEquipmentSubmit(new FormData(e.target));
-        this.setState({ eqForm: { CreationDate: "", Model: "", Description: "", TypeID: "" } });
+        this.setState({ eqForm: { CreationDate: "", Model: "", Description: "", TypeID: "", UserID: "" } });
     }
     render() {
-        return (
-            <form onSubmit={this.onSubmit}>
-                <input type="text"
-                    name="Model"
-                    placeholder="Модель"
-                    value={this.state.eqForm.Model}
-                    onChange={this.onModelChange}
-                />
-                <input type="text"
-                    name="Description"
-                    placeholder="Описание"
-                    value={this.state.eqForm.Description}
-                    onChange={this.onDescriptionChange} />
-                <select name="TypeID" placeholder="Тип оборудования" onChange={this.onTypeChange}>
-                    <option></option>
-                    {this.state.equipmentTypeList.map(item => <option key={item.id} value={item.id}>
-                        {item.name}
-                    </option>
-                    )}
-                </select>
-                <input type="submit" value="Сохранить" />
-            </form>
-        );
+        if (this.formIsAccess()) {
+            return (<div>Перед добавлением нового оборудования заполните список пользователей и/или типов оборудования</div>);
+        }
+        else if (this.state.userListIsLoading || this.state.equipmentTypeIsLoading) {
+            return (<div>Загружаются списки</div>);
+        }
+        else if (!this.state.userListIsLoading && !this.state.equipmentTypeIsLoading && !this.formIsAccess()) {
+            return (
+                <form onSubmit={this.onSubmit}>
+                    <input type="text"
+                        name="Model"
+                        placeholder="Модель"
+                        value={this.state.eqForm.Model}
+                        onChange={this.onPropChange}
+                    />
+                    <input type="text"
+                        name="Description"
+                        placeholder="Описание"
+                        value={this.state.eqForm.Description}
+                        onChange={this.onPropChange} />
+                    <select name="TypeID" placeholder="Тип оборудования" onChange={this.onPropChange}>
+                        <option></option>
+                        {this.state.equipmentTypeList.map(item => <option key={item.id} value={item.id}>
+                            {item.name}
+                        </option>
+                        )}
+                    </select>
+                    <select name="UserID" placeholder="Пользователь" onChange={this.onPropChange}>
+                        <option></option>
+                        {this.state.userList.map(item => <option key={item.id} value={item.id}>
+                            {item.firstName} {item.lastName}
+                        </option>
+                        )}
+                    </select>
+                    <input type="submit" value="Сохранить" />
+                </form>
+            );
+        }
+        
     }
 }

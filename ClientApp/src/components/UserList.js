@@ -14,7 +14,7 @@ export class UserList extends Component {
       super(props);
       this.state = { userList: [], loading: true };
 
-      this.onRemoveUser = this.onRemoveUsere.bind(this);
+      this.onRemoveUser = this.onRemoveUser.bind(this);
 
   }
     componentDidMount() {
@@ -71,7 +71,7 @@ export class UserList extends Component {
                     </thead>
                     <tbody>
                         {this.state.userList.map(item => <tr key={item.id}>
-                            <td>{item.firstname} {item.lastname}</td>
+                            <td>{item.firstName} {item.lastName}</td>
                             <td><span className="action-link" onClick={() => { this.onRemoveUser(item) }}>Удалить</span></td>
                         </tr>
                         )}

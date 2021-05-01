@@ -8,17 +8,15 @@ export class UserForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { name: "" };
+        this.state = { FirstName: "", LastName: "" };
 
         this.onSubmit = this.onSubmit.bind(this);
-        this.onFirstNameChange = this.onFirstNameChange.bind(this);
-        this.onLastNameChange = this.onLastNameChange.bind(this);
+        this.onPropChange = this.onPropChange.bind(this);
     }
-    onFirstNameChange(e) {
-        this.setState({ name: e.target.value });
-    }
-    onLastNameChange(e) {
-        this.setState({ name: e.target.value });
+    onPropChange(e) {
+        let _state = { ...this.state };
+        _state[e.target.name] = e.target.value;
+        this.setState({ _state });
     }
 
     async onSubmit(e) {
@@ -30,7 +28,7 @@ export class UserForm extends Component {
 
         eventBus.dispatch("loadUserList");
 
-        this.setState({ name: "" });
+        this.setState({ FirstName: "", LastName: "" });
     }
     render() {
         return (
@@ -39,13 +37,13 @@ export class UserForm extends Component {
                     name="FirstName"
                     placeholder="Имя"
                     value={this.state.name}
-                    onChange={this.onFirstNameChange}
+                    onChange={this.onPropChange}
                 />
                 <input type="text"
                     name="LastName"
                     placeholder="Фамилия"
                     value={this.state.name}
-                    onChange={this.onLastNameChange}
+                    onChange={this.onPropChange}
                 />
                 <input type="submit" value="Сохранить" />
             </form>

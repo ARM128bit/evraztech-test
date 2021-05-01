@@ -97,16 +97,20 @@ export class EquipmentList extends Component {
                 <table className='table table-striped' aria-labelledby="tabelLabel">
                     <thead>
                         <tr>
-                            <th>Модель</th>
+                            <th>Тип</th>
                             <th>Наименование</th>
+                            <th>Модель</th>
+                            <th>Пользователь</th>
                             <th>Дата регистрации</th>
                             <th>Операции</th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.equipmentList.map(item => <tr key={item.id}>
-                            <td>{item.model}</td>
+                            <td>{item.type.name}</td>
                             <td>{item.description}</td>
+                            <td>{item.model}</td>
+                            <td>{item.user.firstName} {item.user.lastName}</td>
                             <td>{item.creationDate}</td>
                             <td><span className="action-link" onClick={() => { this.onRemoveEquipment(item) }}>Удалить</span></td>
                         </tr>
