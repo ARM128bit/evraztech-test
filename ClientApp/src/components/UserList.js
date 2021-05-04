@@ -44,11 +44,29 @@ export class UserList extends Component {
                 if (xhr.status === 204) {
                     this.loadData();
                 }
-                store.addNotification({
-                    ...undefinedNotification,
-                    ...definedMessages.userForm[xhr.status],
+                if (xhr.responseText) {
+                    try {
+                        let _message = JSON.parse(xhr.responseText);
 
-                }); 
+                        store.addNotification({
+                            ...undefinedNotification,
+                            ..._message,
+                        });
+                    } catch (e) {
+                        store.addNotification({
+                            ...undefinedNotification,
+                            message: "Что-то пошло не так!",
+                            title: "Ой-ёй!",
+                            type: "danger",
+                        });
+                    }
+                } else {
+                    store.addNotification({
+                        ...undefinedNotification,
+                        ...definedMessages.userForm[xhr.status],
+
+                    }); 
+                }
             }.bind(this);
             xhr.send();
         }

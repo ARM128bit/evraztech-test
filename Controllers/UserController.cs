@@ -46,14 +46,28 @@ namespace evraztech_test.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            User user = await db.User.FirstOrDefaultAsync(p => p.ID.ToString() == id);
-            if (user == null)
+            bool _exist = db.Equipment.Any(u => u.UserID.ToString() == id);
+            if (_exist)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    type = "danger",
+                    title = "Ошибка!",
+                    message = "Невозможно удалить пользователя, так как он используется!"
+                }
+                );
             }
-            db.User.Remove(user);
-            await db.SaveChangesAsync();
-            return NoContent();
+            else
+            {
+                User user = await db.User.FirstOrDefaultAsync(p => p.ID.ToString() == id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                db.User.Remove(user);
+                await db.SaveChangesAsync();
+                return NoContent();
+            }
         }
     }
 }

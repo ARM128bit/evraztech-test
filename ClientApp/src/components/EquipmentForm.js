@@ -37,7 +37,7 @@ export class EquipmentForm extends Component {
         this.setState({ userList: data, userListIsLoading: false });
     }
     formIsAccess() {
-        return this.state.userList.length == 0 || this.state.equipmentTypeList.length == 0
+        return this.state.userList.length === 0 || this.state.equipmentTypeList.length === 0
     }
     onSubmit(e) {
         e.preventDefault();

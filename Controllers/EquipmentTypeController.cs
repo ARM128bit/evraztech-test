@@ -47,14 +47,27 @@ namespace evraztech_test.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            EquipmentType equipmentType = await db.EquipmentType.FirstOrDefaultAsync(p => p.ID.ToString() == id);
-            if (equipmentType == null)
+            bool _exist = db.Equipment.Any(u => u.TypeID.ToString() == id);
+            if (_exist)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    type = "danger",
+                    title = "Ошибка!",
+                    message = "Невозможно удалить тип оборудования, так как он используется!"
+                });
             }
-            db.EquipmentType.Remove(equipmentType);
-            await db.SaveChangesAsync();
-            return NoContent();
+            else
+            {
+                EquipmentType equipmentType = await db.EquipmentType.FirstOrDefaultAsync(p => p.ID.ToString() == id);
+                if (equipmentType == null)
+                {
+                    return NotFound();
+                }
+                db.EquipmentType.Remove(equipmentType);
+                await db.SaveChangesAsync();
+                return NoContent();
+            }
         }
     }
 }

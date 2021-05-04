@@ -35,10 +35,10 @@ export class EquipmentTypeList extends Component {
 
             xhr.open("post", this.props.backendURL, true);
             xhr.onload = function () {
-                let _resp = JSON.parse(xhr.responseText);
                 if (xhr.status === 201) {
                     this.loadData();
                 }
+
                 store.addNotification({
                     ...undefinedNotification,
                     ...definedMessages.equipmentTypeForm[xhr.status],
@@ -60,11 +60,30 @@ export class EquipmentTypeList extends Component {
                 if (xhr.status === 204) {
                     this.loadData();
                 }
-                store.addNotification({
-                    ...undefinedNotification,
-                    ...definedMessages.equipmentTypeForm[xhr.status],
+                if (!!xhr.responseText) {
+                    try {
+                        let _resp = JSON.parse(xhr.responseText);
+                        store.addNotification({
+                            ...undefinedNotification,
+                            ..._resp,
+                        });
+                    } catch (e) {
+                        store.addNotification({
+                            ...undefinedNotification,
+                            message: "Что-то пошло не так!",
+                            title: "Ой-ёй!",
+                            type: "danger",
+                        });
+                    }
+                } else {
 
-                }); 
+                    console.log(!!xhr.responseText);
+                    store.addNotification({
+                        ...undefinedNotification,
+                        ...definedMessages.equipmentTypeForm[xhr.status],
+
+                    });
+                }
             }.bind(this);
             xhr.send();
         }
